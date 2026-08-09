@@ -1,9 +1,9 @@
-'use client'
+"use client"
 
-import { useBlockchainRegistry } from '@/hooks/use-blockchain-registry'
-import { Button } from '@/components/ui/button'
-import { useEffect, useState } from 'react'
-import { Wallet, Unplug, AlertCircle, CheckCircle } from 'lucide-react'
+import { useBlockchainRegistry } from "@/hooks/use-blockchain-registry";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { Wallet, Unplug, AlertCircle, CheckCircle } from "lucide-react";
 
 export function BlockchainConnector() {
   const {

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle, Loader2, AlertCircle, Copy, ExternalLink, Lock, ShieldCheck } from 'lucide-react'
 import { ethers } from 'ethers'
 import { createClient } from '@/lib/supabase/client'
-import { COSTON2_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
+import { BOT_CHAIN_ID, BOT_TESTNET_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
 
 interface BlockchainBadgeProps {
   record: {
@@ -44,6 +44,8 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [isOnChainActive, setIsOnChainActive] = useState(false)
+
+  const CHAIN_ID = chainId === BOT_CHAIN_ID ? BOT_CHAIN_ID : BOT_TESTNET_CHAIN_ID
 
   useEffect(() => {
     setMounted(true)
@@ -109,7 +111,7 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
         transaction_hash: result.transactionHash,
         verification_timestamp: new Date().toISOString(),
         is_verified: true,
-        chain_id: COSTON2_CHAIN_ID,
+        chain_id: CHAIN_ID,
         contract_address: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -171,7 +173,7 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
         transaction_hash: result.transactionHash,
         verification_timestamp: new Date().toISOString(),
         is_verified: true,
-        chain_id: COSTON2_CHAIN_ID,
+        chain_id: CHAIN_ID,
         contract_address: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -260,7 +262,7 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              Flare Blockchain Attestation
+              BOT Network Attestation
             </h3>
             <p className="text-xs text-slate-500">Immutable proof of record existence</p>
           </div>
@@ -288,7 +290,7 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
       {!verified ? (
         <div className="space-y-3">
           <p className="text-xs text-slate-600 dark:text-slate-400">
-            Secure this medical record by creating an immutable cryptographic proof on the Flare network. This allows providers to verify its authenticity without relying on a central authority.
+            Secure this medical record by creating an immutable cryptographic proof on the BOT network. This allows providers to verify its authenticity without relying on a central authority.
           </p>
           <Button
             onClick={verifyOnBlockchain}
@@ -308,7 +310,7 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
             ) : (
               <>
                 <ShieldCheck size={18} className="mr-2" />
-                Attest on Flare Network
+                Attest on BOT Network
               </>
             )}
           </Button>
@@ -340,12 +342,12 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
                   </Button>
                 </div>
                 <a
-                  href={`https://coston2-explorer.flare.network/tx/${transactionHash}`}
+                  href={`${CHAIN_ID === BOT_CHAIN_ID ? `https://scan.botchain.ai/tx/${transactionHash}` : `https://scan.bohr.life/tx/${transactionHash}`}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline text-xs font-bold pt-1"
                 >
-                  View on Coston2 Explorer
+                  View on BOT Explorer
                   <ExternalLink size={12} />
                 </a>
               </div>
@@ -385,7 +387,7 @@ export function BlockchainBadge({ record }: BlockchainBadgeProps) {
 
           <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 rounded-lg">
              <p className="text-[10px] text-emerald-800 dark:text-emerald-300 leading-relaxed font-medium">
-              Attestation Complete: This record is now immutably linked to your identity on Flare. Authorized providers can verify the integrity of this document using its cryptographic fingerprint.
+              Attestation Complete: This record is now immutably linked to your identity on BOT Chain. Authorized providers can verify the integrity of this document using its cryptographic fingerprint.
             </p>
           </div>
         </div>

@@ -48,7 +48,7 @@ export function useBlockchainRegistry() {
       const signer = await provider.getSigner()
       const network = await provider.getNetwork()
 
-      const contractAddress = CONTRACT_ADDRESSES.coston2
+      const contractAddress = CONTRACT_ADDRESSES.botChain
       if (!contractAddress) {
         throw new Error('Contract address not configured')
       }

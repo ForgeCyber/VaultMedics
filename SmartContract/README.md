@@ -62,7 +62,7 @@ forge script script/Deploy.s.sol --broadcast --rpc-url $RPC_URL --private-key $P
 
 ### Verify Deployed Contract
 ```console
-forge verify-contract $ADDRESS src/MedicalRecordRegistry.sol:MedicalRecordRegistry --etherscan-api-key $KEY
+forge verify-contract $ADDRESS src/MedicalRecordRegistry.sol:MedicalRecordRegistry --etherscan-api-key $API_KEY
 ```
 
 ### Testing

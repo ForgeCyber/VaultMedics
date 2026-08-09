@@ -231,7 +231,7 @@ export function ConsentManager({ userId, patientWalletAddress }: ConsentManagerP
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Grant or revoke cryptographic access permissions to your medical
-                records on Flare Blockchain
+                records on BOT Network
               </p>
             </div>
           </div>

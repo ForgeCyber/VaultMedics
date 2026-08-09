@@ -63,7 +63,7 @@ export default async function LandingPage() {
         <div className="max-w-5xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-sm font-medium mb-8">
             <Globe size={14} />
-            Built on Flare Blockchain · Flare Summer Signal
+            Built on BOT Chain · BOT Chain Africa Builder
           </div>
           <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
             Your Health.
@@ -121,7 +121,7 @@ export default async function LandingPage() {
                 'One secure vault for all your medical records',
                 'AI explains reports in plain language',
                 'Full audit trail of every access event',
-                'Blockchain-verified document integrity on Flare',
+                'Blockchain-verified document integrity on BOT Network',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <CheckCircle size={18} className="text-emerald-500 mt-0.5 shrink-0" />
@@ -161,7 +161,7 @@ export default async function LandingPage() {
               },
               {
                 icon: Lock,
-                title: 'Flare Blockchain Verification',
+                title: 'BOT Blockchain Verification',
                 desc: 'Document hashes stored on-chain. Tamper-evident integrity without exposing health data.',
                 color: 'purple',
               },
@@ -199,10 +199,10 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Flare Integration */}
+      {/* Bot Integration */}
       <section className="py-20 px-6 bg-slate-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Powered by Flare Blockchain</h2>
+          <h2 className="text-3xl font-bold mb-4">Powered by BOT Network</h2>
           <p className="text-slate-300 mb-8 text-lg">
             Medical records never go on-chain. Only hashes, consent events, and audit metadata —
             guaranteeing integrity, transparency, and privacy.

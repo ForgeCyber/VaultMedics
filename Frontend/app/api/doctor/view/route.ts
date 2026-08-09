@@ -3,6 +3,8 @@ import { decryptBuffer, getIpfsHashFromUri, buildPinataGatewayUrl } from '@/lib/
 import { MEDICAL_RECORD_REGISTRY_ABI, CONTRACT_ADDRESSES } from '@/lib/blockchain/contract-abi'
 import { ethers } from 'ethers'
 import { NextRequest, NextResponse } from 'next/server'
+import { BOT_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
+import { useAccount } from 'wagmi'
 
 // Initialize Supabase Admin Client (bypasses RLS)
 const supabaseAdmin = createClient(
@@ -21,6 +23,7 @@ async function fetchIpfsFile(ipfsUri: string) {
 }
 
 export async function POST(request: NextRequest) {
+  const { chainId } = useAccount()
   try {
     const { blockchainHash, patientAddress, doctorAddress, signature } = await request.json()
 
@@ -73,9 +76,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Verify blockchain consent (required if no database permission)
-    const provider = new ethers.JsonRpcProvider(process.env.COSTON2_RPC_URL)
+    const provider = new ethers.JsonRpcProvider(chainId === BOT_CHAIN_ID ? process.env.BOT_RPC_URL : process.env.tBOT_RPC_URL)
     const contract = new ethers.Contract(
-      CONTRACT_ADDRESSES.coston2,
+      CONTRACT_ADDRESSES.botChain,
       MEDICAL_RECORD_REGISTRY_ABI,
       provider
     )

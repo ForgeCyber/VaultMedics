@@ -1,4 +1,6 @@
-import { flare, flareTestnet} from 'wagmi/chains'
+import { config } from '@/lib/blockchain/wagmi-config'
+
+const { chains } = config
 
 // Contract ABI for MedicalRecordRegistry
 // Extracted from MedicalRecordRegistry.sol
@@ -832,30 +834,29 @@ export const MEDICAL_RECORD_REGISTRY_ABI = [
 
 // Contract addresses by network
 export const CONTRACT_ADDRESSES = {
-  coston2: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || "",
-  flare: process.env.NEXT_PUBLIC_FLARE_REGISTRY_ADDRESS || "",
+  botChain: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || "",
 };
 
 // Network configurations
 export const NETWORKS = {
-  coston2: {
-    chainId: flareTestnet.id,
-    name: flareTestnet.name,
-    rpcUrl: flareTestnet.rpcUrls.default.http[0],
-    explorerUrl: flareTestnet.blockExplorers.default.url,
+  botTestnet: {
+    chainId: chains[0].id,
+    name: chains[0].name,
+    rpcUrl: chains[0].rpcUrls.default.http[0],
+    explorerUrl: chains[0].blockExplorers.default.url,
     currency: {
-      symbol: flareTestnet.nativeCurrency.symbol,
-      decimal: flareTestnet.nativeCurrency.decimals,
+      symbol: chains[0].nativeCurrency.symbol,
+      decimal: chains[0].nativeCurrency.decimals,
     },
   },
-  flare: {
-    chainId: flare.id,
-    name: flare.name,
-    rpcUrl: flare.rpcUrls.default.http[0],
-    explorerUrl: flare.blockExplorers.default.url,
+  botMainnet: {
+    chainId: chains[1].id,
+    name: chains[1].name,
+    rpcUrl: chains[1].rpcUrls.default.http[0],
+    explorerUrl: chains[1].blockExplorers.default.url,
     currency: {
-      symbol: flare.nativeCurrency.symbol,
-      decimal: flare.nativeCurrency.decimals
+      symbol: chains[1].nativeCurrency.symbol,
+      decimal: chains[1].nativeCurrency.decimals
     },
   },
 };

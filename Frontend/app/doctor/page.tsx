@@ -30,7 +30,7 @@ interface ProviderInfo {
 }
 
 interface AccessStatus {
-  status: 'idle' | 'granted' | 'denied' | 'checking'
+  status: "idle" | "granted" | "denied" | "checking"
   message: string
 }
 
@@ -82,7 +82,7 @@ export default function DoctorPortalPage() {
         setAccessStatus({ status: 'denied', message: 'No active consent found. Ask the patient to grant access via their VaultMedics Permissions panel.' })
       }
     } catch {
-      setAccessStatus({ status: 'denied', message: 'Could not verify access. Ensure you are on Flare Coston2 testnet.' })
+      setAccessStatus({ status: 'denied', message: 'Could not verify access. Ensure you are on BOT Network.' })
     }
   }
 
@@ -138,6 +138,22 @@ export default function DoctorPortalPage() {
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-12 space-y-12">
+        {accessStatus.message && (
+          <div
+            className={`flex items-start gap-3 p-4 rounded-xl text-sm border ${
+              accessStatus.status === 'checking' ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200'
+                : accessStatus.status === 'granted'
+                ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200'
+                : accessStatus.status === 'denied'
+                ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
+                : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200'
+            }`}
+          >
+            {accessStatus.status === 'granted' ? <CheckCircle2 className="shrink-0 mt-0.5" size={18} /> : <AlertCircle className="shrink-0 mt-0.5" size={18} />}
+            <span>{accessStatus.message}</span>
+          </div>
+        )}
+
         {accessStatus.status !== 'denied' && accessStatus.status !== 'granted' ? (
           <div className="space-y-12">
             <div className="text-center max-w-2xl mx-auto">
@@ -146,7 +162,7 @@ export default function DoctorPortalPage() {
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-400">
                 Request and verify patient-authorized access to medical records. All access is cryptographically
-                consented on Flare blockchain.
+                consented on BOT Chain.
               </p>
             </div>
 
@@ -160,7 +176,7 @@ export default function DoctorPortalPage() {
                 {
                   icon: Lock,
                   title: 'Blockchain Verified',
-                  desc: 'Consent records are immutably stored on Flare for auditability.',
+                  desc: 'Consent records are immutably stored on BOT for auditability.',
                 },
                 {
                   icon: FileSearch,
@@ -213,22 +229,6 @@ export default function DoctorPortalPage() {
                   </div>
                 )}
 
-                {accessStatus.message && (
-                  <div
-                    className={`flex items-start gap-3 p-4 rounded-xl text-sm border ${
-                      accessStatus.status === 'checking' ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200'
-                        : accessStatus.status === 'granted'
-                        ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200'
-                        : accessStatus.status === 'denied'
-                        ? 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
-                        : 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200'
-                    }`}
-                  >
-                    {accessStatus.status === 'granted' ? <CheckCircle2 className="shrink-0 mt-0.5" size={18} /> : <AlertCircle className="shrink-0 mt-0.5" size={18} />}
-                    <span>{accessStatus.message}</span>
-                  </div>
-                )}
-
                 <Button
                   onClick={verifyAccess}
                   disabled={loading || accessStatus.status === 'checking'}
@@ -237,7 +237,7 @@ export default function DoctorPortalPage() {
                   {accessStatus.status === 'checking' ? (
                     <>
                       <Loader2 size={20} className="mr-2 animate-spin" />
-                      Verifying on Flare...
+                      Verifying on blockchain...
                     </>
                   ) : (
                     'Check Access Permission'
@@ -333,7 +333,7 @@ export default function DoctorPortalPage() {
                   Patient Records: <span className="font-mono text-blue-600 dark:text-blue-400">{verifiedPatient.slice(0, 8)}...{verifiedPatient.slice(-6)}</span>
                 </h1>
                 <p className="text-slate-600 dark:text-slate-400">
-                  You have been granted secure access to this patient's medical history on Flare.
+                  You have been granted secure access to this patient's medical history on BOT Network.
                 </p>
               </div>
               <Button variant="outline" onClick={() => setAccessStatus({ status: 'idle', message: '' })} className="shrink-0">

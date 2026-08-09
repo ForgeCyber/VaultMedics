@@ -11,7 +11,7 @@ export function WalletConnector( {className}: {className?: string} ) {
   const [showModal, setShowModal] = useState(false)
   const [showAccountModal, setShowAccountModal] = useState(false)
   const { connectors, connect } = useConnect()
-  const { address, isConnected, chain } = useAccount()
+  const { address, isConnected, chain, chainId } = useAccount()
   const { disconnect } = useDisconnect()
   const [copied, setCopied] = useState(false)
 
@@ -38,6 +38,8 @@ export function WalletConnector( {className}: {className?: string} ) {
     disconnect()
     setShowAccountModal(false)
   }
+
+
 
   if (isConnected) {
     return (
@@ -105,7 +107,7 @@ export function WalletConnector( {className}: {className?: string} ) {
                   Copy Address
                 </Button>
                 <Button
-                  onClick={() => window.open(`https://coston2-explorer.flare.network/address/${address}`, '_blank')}
+                  onClick={() => window.open(`${chainId === 677 ? `https://scan.botchain.ai/address/${address}` : `https://scan.bohr.life/address/${address}`}`, '_blank')}
                   variant="outline"
                   className="w-full justify-start gap-2"
                 >

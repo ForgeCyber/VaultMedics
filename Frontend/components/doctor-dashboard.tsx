@@ -300,7 +300,7 @@ export function DoctorDashboard({ patientAddress }: DoctorDashboardProps) {
     return (
       <div className="flex flex-col items-center justify-center py-20 space-y-4">
         <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
-        <p className="text-slate-600 dark:text-slate-400 font-medium">Fetching patient records from Flare...</p>
+        <p className="text-slate-600 dark:text-slate-400 font-medium">Fetching patient records from Blockchain...</p>
       </div>
     )
   }
@@ -326,7 +326,7 @@ export function DoctorDashboard({ patientAddress }: DoctorDashboardProps) {
         </div>
         <h3 className="text-xl font-bold text-slate-900 dark:text-white">No Blockchain Records Found</h3>
         <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
-          This patient has not yet registered any medical records on the Flare blockchain or has not granted you visibility permissions.
+          This patient has not yet registered any medical records on the blockchain or has not granted you visibility permissions.
         </p>
       </div>
     )
@@ -473,7 +473,7 @@ export function DoctorDashboard({ patientAddress }: DoctorDashboardProps) {
         <div className="text-sm">
           <p className="font-bold text-amber-900 dark:text-amber-100 mb-1">Confidential Compute Note</p>
           <p className="text-amber-800 dark:text-amber-200">
-            For the Flare Summer Signal hackathon, this dashboard demonstrates medical record verification via Flare blockchain. In a production environment, sensitive data would be processed using **Flare Confidential Compute** to ensure data is never decrypted outside of secure enclaves.
+            This dashboard demonstrates medical record verification via BOT Chain. In a production environment, sensitive data would be processed using BOT Network Technology to ensure data is never decrypted outside of secure enclaves.
           </p>
         </div>
       </div>
@@ -508,41 +508,6 @@ export function DoctorDashboard({ patientAddress }: DoctorDashboardProps) {
                     title={previewTitle} 
                     className="h-[70vh] w-full rounded-lg border border-slate-200 dark:border-slate-800" 
                   />
-                  {/* <object
-                    content={previewUrl}
-                    data={previewUrl}
-                    type="application/pdf"
-                    className="h-[70vh] w-full rounded-lg border border-slate-200 dark:border-slate-800"
-                  >
-                    <div className="p-4 text-center text-sm text-slate-600 dark:text-slate-300">
-                      Your browser does not support PDF viewing. Please use the buttons below.
-                    </div>
-                  </object> */}
-                  {/* <div className="flex gap-2">
-                    <Button
-                      onClick={() => {
-                        const link = document.createElement('a')
-                        link.href = previewUrl
-                        link.download = previewTitle || 'medical-record.pdf'
-                        document.body.appendChild(link)
-                        link.click()
-                        document.body.removeChild(link)
-                      }}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Download PDF
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        window.open(previewUrl, '_blank')
-                      }}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Open in New Tab
-                    </Button>
-                  </div> */}
                 </div>
               ) : previewUrl && (previewMimeType.startsWith('text/') || previewMimeType.includes('json') || previewMimeType.includes('xml')) ? (
                 <pre 

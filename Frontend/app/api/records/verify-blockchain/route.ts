@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { COSTON2_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
+import { BOT_CHAIN_ID, BOT_TESTNET_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
+import { useAccount } from 'wagmi'
 
 /**
  * Creates a cryptographic hash for blockchain verification anchoring
@@ -12,6 +13,9 @@ function generateBlockchainHash(data: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  const { chainId } = useAccount()
+  const CHAIN_ID = chainId === BOT_CHAIN_ID ? BOT_CHAIN_ID : BOT_TESTNET_CHAIN_ID
+
   try {
     const supabase = await createClient()
 
@@ -57,7 +61,7 @@ export async function POST(request: NextRequest) {
         transactionHash: existingVerification.transaction_hash,
         isVerified: true,
         verificationTimestamp: existingVerification.verification_timestamp,
-        message: 'Record is already verified on Flare Network',
+        message: 'Record is already verified on BOT Network',
       })
     }
 
@@ -99,7 +103,7 @@ export async function POST(request: NextRequest) {
           transaction_hash: transactionHash,
           verification_timestamp: now,
           is_verified: true,
-          chain_id: COSTON2_CHAIN_ID,
+          chain_id: CHAIN_ID,
           contract_address: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS,
           created_at: now,
           updated_at: now,
@@ -116,8 +120,8 @@ export async function POST(request: NextRequest) {
       transactionHash,
       isVerified: true,
       verificationTimestamp: now,
-      message: 'Record successfully verified on Flare Network (Coston2 Testnet)',
-      network: 'Flare Coston2',
+      message: 'Record successfully verified on BOT Network',
+      network: 'BOT',
     })
   } catch (error) {
     console.error('[MediVault] Blockchain verification error:', error)

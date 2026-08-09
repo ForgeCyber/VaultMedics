@@ -138,6 +138,6 @@ async function decryptAndViewFile(ipfsHash: string, encryptionKey?: string) {
     throw new Error(`Failed to fetch file from IPFS: ${response.status} ${response.statusText}`)
   }
   const buffer = await response.arrayBuffer()
-  const decrypted = decryptBuffer(new Uint8Array(buffer), encryptionKey)
+  const decrypted = decryptBuffer(Buffer.from(buffer), encryptionKey)
   return decrypted
 }
