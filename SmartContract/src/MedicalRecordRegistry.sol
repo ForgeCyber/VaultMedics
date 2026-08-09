@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 /**
  * @title MedicalRecordRegistry
- * @dev A secure registry for medical records on Flare blockchain
+ * @dev A secure registry for medical records on BOT blockchain
  * Stores immutable proof of existence and metadata for medical records
  */
 

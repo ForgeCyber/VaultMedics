@@ -30,8 +30,8 @@ The main contract (325 lines) that manages:
 ### Installation
 
 ```console
-cd SContract
-npm install
+cd SmartContract
+forge install
 ```
 
 ### Environment Setup
@@ -43,45 +43,46 @@ cp .env.example .env
 Edit `.env` and add your private key:
 ```
 PRIVATE_KEY=your_wallet_private_key_here
-BOT_RPC_API_KEY=your_api_key_optional
-BOT_EXPLORER_API_KEY=your_api_key_optional
+BOT_RPC_URL=your_api_key_optional
+EXPLORER_RPC_URL=your_api_key_optional
 ```
 
 ### Compile Contracts
 
 ```console
-npx hardhat compile
+forge build
 ```
 
 ### Deploy to Bot Networks
 
-**Bot Testnet**:
-```console
-npx hardhat run scripts/deploy.ts --network tbot
-```
-
 **Bot Mainnet**:
 ```console
-npx hardhat run scripts/deploy.ts --network bot
+forge script script/Deploy.s.sol --broadcast --rpc-url $RPC_URL --private-key $PRIVATE_KEY
+```
+
+### Verify Deployed Contract
+```console
+forge verify-contract $ADDRESS src/MedicalRecordRegistry.sol:MedicalRecordRegistry --etherscan-api-key $KEY
 ```
 
 ### Testing
 
 ```console
-npx hardhat test
+forge test
+or
+forge test -vvvv
 ```
 
 ## Repository Structure
 
 ```
-├── contracts/              # Solidity smart contracts
+├── src/                    # Solidity smart contracts
 │   └── MedicalRecordRegistry.sol
-├── scripts/                # Deployment scripts
-│   └── deploy.ts
+├── script/                # Deployment scripts
+│   └── Deploy.s.sol
 ├── test/                   # Contract tests
-├── artifacts/              # Compiled contract artifacts
-├── hardhat.config.ts       # Hardhat configuration
-├── package.json
+├── out/                    # Compiled contract artifacts
+├── foundry.toml            # Foundry configuration
 ├── .env.example
 └── README.md
 ```
