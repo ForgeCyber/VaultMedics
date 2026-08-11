@@ -834,7 +834,7 @@ export const MEDICAL_RECORD_REGISTRY_ABI = [
 
 // Contract addresses by network
 export const CONTRACT_ADDRESSES = {
-  botChain: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || "",
+  botChain: process.env.NEXT_PUBLIC_REGISTRY_ADDRESS || "0x76B28d8A0e95dBF90eDE0cB4C709e6dE30b761C0",
 };
 
 // Network configurations
