@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useConnection, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { createClient } from '@/lib/supabase/client'
 
 interface BlockchainVerificationResult {
@@ -12,7 +12,7 @@ interface BlockchainVerificationResult {
 }
 
 export function useBlockchainVerification() {
-  const { address, isConnected, chainId } = useAccount()
+  const { address, isConnected, chainId } = useConnection()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const { writeContractAsync } = useWriteContract()

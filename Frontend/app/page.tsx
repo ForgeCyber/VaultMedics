@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/theme-toggle'
@@ -16,6 +15,7 @@ import {
   Globe,
 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default async function LandingPage() {
   const supabase = await createClient()
@@ -33,9 +33,15 @@ export default async function LandingPage() {
       <nav className="fixed top-0 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-40">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-linear-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <Heart size={16} className="text-white" />
-            </div>
+            {/* <div className="w-8 h-8 rounded-lg flex items-center justify-center"> */}
+              <Image
+                src="/icon-dark.png"
+                alt="VaultMedics Logo"
+                width={500}
+                height={500}
+                className="ml-2 w-10 h-10 rounded-lg"
+              />
+            {/* </div> */}
             <span className="text-xl font-bold bg-linear-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
               VaultMedics
             </span>
@@ -241,10 +247,16 @@ export default async function LandingPage() {
       <footer className="bg-slate-900 text-slate-400 py-10 px-6 border-t border-slate-800">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Heart size={16} className="text-blue-400" />
+            <Image
+              src="/icon-dark.png"
+              alt="VaultMedics Logo"
+              width={500}
+              height={500}
+              className="ml-2 w-8 h-8 rounded-lg"
+            />
             <span className="font-semibold text-white">VaultMedics</span>
           </div>
-          <p className="text-sm">&copy; 2026 VaultMedics. Privacy-first healthcare for everyone.</p>
+          <p className="text-sm">&copy; {new Date().getFullYear()} VaultMedics. Privacy-first healthcare for everyone.</p>
           <div className="flex gap-4 text-sm">
             <Link href="/doctor" className="hover:text-white transition-colors">
               Doctor Portal
