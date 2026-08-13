@@ -154,23 +154,28 @@ export function DoctorDashboard({ patientAddress }: DoctorDashboardProps) {
       }
 
       const contentType = response.headers.get('content-type') || 'application/octet-stream'
-      const documentUrl = response.headers.get('document')
       const blob = await response.blob()
-      const objectUrl = URL.createObjectURL(blob)
+      const headerBytes = await blob.slice(0, 5).arrayBuffer()
+      const headerText = new TextDecoder().decode(headerBytes)
+      const normalizedMimeType = headerText === '%PDF-' || contentType.toLowerCase().includes('pdf')
+        ? 'application/pdf'
+        : contentType
+      const objectUrl = URL.createObjectURL(new Blob([blob], { type: normalizedMimeType }))
 
       console.log('[DoctorDashboard] File received:', {
         contentType,
+        normalizedMimeType,
         blobSize: blob.size,
         objectUrl,
         recordHash
       })
 
-      if (contentType.startsWith('text/') || contentType.includes('json') || contentType.includes('xml')) {
+      if (normalizedMimeType.startsWith('text/') || normalizedMimeType.includes('json') || normalizedMimeType.includes('xml')) {
         const text = await blob.text()
         setPreviewText(text)
       }
 
-      setPreviewMimeType(contentType)
+      setPreviewMimeType(normalizedMimeType)
       setPreviewUrl(objectUrl)
       setIsPreviewOpen(true)
     } catch (err) {

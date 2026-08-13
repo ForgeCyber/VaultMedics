@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { BOT_CHAIN_ID, BOT_TESTNET_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
-import { useAccount } from 'wagmi'
+import { BOT_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
 
 /**
  * Creates a cryptographic hash for blockchain verification anchoring
@@ -13,8 +12,7 @@ function generateBlockchainHash(data: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  const { chainId } = useAccount()
-  const CHAIN_ID = chainId === BOT_CHAIN_ID ? BOT_CHAIN_ID : BOT_TESTNET_CHAIN_ID
+  const CHAIN_ID = BOT_CHAIN_ID
 
   try {
     const supabase = await createClient()

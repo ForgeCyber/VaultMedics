@@ -4,7 +4,6 @@ import { MEDICAL_RECORD_REGISTRY_ABI, CONTRACT_ADDRESSES } from '@/lib/blockchai
 import { ethers } from 'ethers'
 import { NextRequest, NextResponse } from 'next/server'
 import { BOT_CHAIN_ID } from '@/lib/blockchain/wagmi-config'
-import { useAccount } from 'wagmi'
 
 // Initialize Supabase Admin Client (bypasses RLS)
 const supabaseAdmin = createClient(
@@ -22,8 +21,47 @@ async function fetchIpfsFile(ipfsUri: string) {
   return Buffer.from(await response.arrayBuffer())
 }
 
+async function getDatabasePermission(
+  patientAddress: string,
+  doctorAddress: string,
+  patientUser: any = null
+) {
+  const normalizedPatientAddress = patientAddress.toLowerCase()
+  const normalizedDoctorAddress = doctorAddress.toLowerCase()
+
+  const { data: permissions, error } = await supabaseAdmin
+    .from('provider_permissions')
+    .select('*')
+    .eq('is_active', true)
+    .ilike('provider_wallet_address', normalizedDoctorAddress)
+    .limit(200)
+
+  if (error || !permissions?.length) {
+    return false
+  }
+
+  return permissions.some((permission: any) => {
+    const matchesPatientId = !!patientUser?.id && permission.patient_id === patientUser.id
+    const matchesWallet = !!permission.patient_wallet_address && permission.patient_wallet_address.toLowerCase() === normalizedPatientAddress
+    const matchesProvider = !!permission.provider_wallet_address && permission.provider_wallet_address.toLowerCase() === normalizedDoctorAddress
+
+    if (!matchesProvider) {
+      return false
+    }
+
+    if (matchesPatientId || matchesWallet) {
+      if (!permission.expires_at) {
+        return true
+      }
+
+      return new Date(permission.expires_at) >= new Date()
+    }
+
+    return false
+  })
+}
+
 export async function POST(request: NextRequest) {
-  const { chainId } = useAccount()
   try {
     const { blockchainHash, patientAddress, doctorAddress, signature } = await request.json()
 
@@ -46,37 +84,24 @@ export async function POST(request: NextRequest) {
     try {
       const { data: user, error: userError } = await supabaseAdmin
         .from('auth.users')
-        .select('id')
+        .select('id, raw_user_meta_data, user_metadata')
         .or(`raw_user_meta_data->>wallet_address.eq.${patientAddress.toLowerCase()},user_metadata->>wallet_address.eq.${patientAddress.toLowerCase()}`)
-        .single()
+        .limit(1)
+        .maybeSingle()
 
       if (!userError && user) {
         patientUser = user
-
-        // 3. Check database for provider permission for this specific patient
-        const { data: permission, error: permError } = await supabaseAdmin
-          .from('provider_permissions')
-          .select('*')
-          .eq('patient_id', patientUser.id)
-          .eq('provider_wallet_address', doctorAddress.toLowerCase())
-          .eq('is_active', true)
-          .single()
-
-        if (!permError && permission) {
-          // Check if permission has expired
-          if (!permission.expires_at || new Date(permission.expires_at) >= new Date()) {
-            hasDatabasePermission = true
-          }
-        }
       } else {
-        console.log('[DoctorView] Patient not found in database, will rely on blockchain consent only')
+        console.log('[DoctorView] Patient not found in auth.users, checking wallet-based permission rows')
       }
+
+      hasDatabasePermission = await getDatabasePermission(patientAddress, doctorAddress, patientUser)
     } catch (error) {
       console.log('[DoctorView] Patient lookup failed, will rely on blockchain consent only:', error)
     }
 
     // 4. Verify blockchain consent (required if no database permission)
-    const provider = new ethers.JsonRpcProvider(chainId === BOT_CHAIN_ID ? process.env.BOT_RPC_URL : process.env.tBOT_RPC_URL)
+    const provider = new ethers.JsonRpcProvider(BOT_CHAIN_ID.toString())
     const contract = new ethers.Contract(
       CONTRACT_ADDRESSES.botChain,
       MEDICAL_RECORD_REGISTRY_ABI,
@@ -188,6 +213,19 @@ async function resolveFileMetadata(supabase: any, medicalRecord: any) {
   }
 }
 
+function detectMimeType(fileBuffer: Buffer, fallbackMimeType?: string) {
+  const fileHeader = fileBuffer.subarray(0, 5).toString('ascii')
+  if (fileHeader === '%PDF-') {
+    return 'application/pdf'
+  }
+
+  if (fallbackMimeType && fallbackMimeType.toLowerCase().includes('pdf')) {
+    return 'application/pdf'
+  }
+
+  return fallbackMimeType || 'application/octet-stream'
+}
+
 async function serveFile(medicalRecord: any) {
   const fileUrl = medicalRecord.file_url
   if (!fileUrl) {
@@ -196,7 +234,7 @@ async function serveFile(medicalRecord: any) {
 
   const bytes = await fetchIpfsFile(fileUrl)
   const decryptedBytes = medicalRecord.encryption_key ? decryptBuffer(bytes, medicalRecord.encryption_key) : bytes
-  const mimeType = medicalRecord.mime_type || 'application/octet-stream'
+  const mimeType = detectMimeType(decryptedBytes, medicalRecord.mime_type)
 
   // Return file for viewing (inline) without download capability
   return new NextResponse(decryptedBytes, {
